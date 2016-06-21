@@ -4,7 +4,10 @@
   "description": "Point counter",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "node ./node_modules/bower/bin/bower install",
+    "start": "node ./node_modules/gulp/bin/gulp.js",
+    "test": "node ./node_modules/cross-env/bin/cross-env BABEL_ENV=test ./node_modules/mocha/bin/mocha",
+    "test-cov": "node ./node_modules/cross-env/bin/cross-env BABEL_ENV=test-cov ./node_modules/nyc/bin/nyc.js --reporter=html --reporter=text ./node_modules/mocha/bin/mocha"
   },
   "repository": {
     "type": "git",
@@ -38,8 +41,6 @@
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.5.3",
     "gulp-util": "^3.0.6",
-    "lodash.isequal": "^4.2.0",
-    "lodash.union": "^4.4.0",
     "postcss-import": "^8.1.2",
     "q": "^1.4.1",
     "react": "^15.1.0",
