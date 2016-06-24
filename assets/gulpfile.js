@@ -54,7 +54,6 @@ var b = browserify({
 function bundleJS() {
     return b
         .transform('babelify')
-        .transform('browserify-shim', {global: true})
         .bundle()
         .on('error', function(err) {
             console.log(err.message);
