@@ -1,0 +1,6 @@
+{
+  "name": "gtm-diff",
+  "dependencies": {
+    "normalize-css": "normalize.css#~3.0.3"
+  }
+}
