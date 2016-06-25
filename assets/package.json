@@ -29,7 +29,6 @@
     "bower": "^1.7.9",
     "browser-sync": "^2.13.0",
     "browserify": "^13.0.1",
-    "browserify-shim": "^3.8.12",
     "cross-env": "^1.0.8",
     "del": "^2.2.0",
     "envify": "^3.4.1",
@@ -44,9 +43,6 @@
     "gulp-uglify": "^1.5.3",
     "gulp-util": "^3.0.6",
     "postcss-import": "^8.1.2",
-    "react": "^15.1.0",
-    "react-dom": "^15.1.0",
-    "react-redux": "^4.4.1",
     "run-sequence": "^1.2.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
@@ -58,10 +54,6 @@
     "mocha": "^2.4.5",
     "nyc": "^6.6.1",
     "power-assert": "^1.4.1"
-  },
-  "browserify-shim": {
-    "react": "global:React",
-    "react/lib/ReactDOM": "global:ReactDOM"
   },
   "nyc": {
     "exclude": [

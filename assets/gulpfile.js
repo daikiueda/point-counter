@@ -3,10 +3,7 @@
 const isProduction = process.env.NODE_ENV === 'production',
     SETTINGS = {
         JS_LIBS: {
-            SRC: [
-                './bower_components/react/react.js',
-                './bower_components/react/react-dom.js'
-            ],
+            SRC: [],
             DEST: '../public/js',
             FILENAME: 'libs.js'
         },
@@ -60,7 +57,6 @@ function bundleJS() {
     return b
         .transform('envify')
         .transform('babelify')
-        .transform('browserify-shim', {global: true})
         .bundle()
         .on('error', function(err) {
             console.log(err.message);
