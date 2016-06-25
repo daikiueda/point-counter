@@ -32,9 +32,11 @@
     "browserify-shim": "^3.8.12",
     "cross-env": "^1.0.8",
     "del": "^2.2.0",
+    "envify": "^3.4.1",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
     "gulp-gh-pages": "^0.5.3",
+    "gulp-if-else": "^1.0.3",
     "gulp-plumber": "^1.1.0",
     "gulp-postcss": "^6.1.1",
     "gulp-sass": "^2.3.2",
@@ -42,7 +44,6 @@
     "gulp-uglify": "^1.5.3",
     "gulp-util": "^3.0.6",
     "postcss-import": "^8.1.2",
-    "q": "^1.4.1",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-redux": "^4.4.1",
@@ -63,6 +64,8 @@
     "react/lib/ReactDOM": "global:ReactDOM"
   },
   "nyc": {
-    "exclude": ["test/**/*.test.js"]
+    "exclude": [
+      "test/**/*.test.js"
+    ]
   }
 }
