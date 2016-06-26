@@ -12,4 +12,4 @@ if (!location.hash.length) {
     location.hash = eventId;
 }
 
-pointCounter.start(eventId);
+pointCounter.start(eventId, true);

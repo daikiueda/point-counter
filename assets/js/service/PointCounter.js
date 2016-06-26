@@ -1,35 +1,47 @@
+import Emitter from 'tiny-emitter';
+
 import Logger from '../utils/Logger';
 import AnalyticsTrackingAPI from './google/AnalyticsTrackingAPI';
 import AnalyticsReportingAPI from './google/AnalyticsReportingAPI';
 
 const DEFAULT_REPORTING_INTERVAL_MILLISECOND = 2000;
 
-export default class PointCounter {
+export default class PointCounter extends Emitter {
     constructor(googleCoreCredential, analyticsSetting) {
+        super();
+
+        this.analyticsSetting = analyticsSetting;
         this.reporter = new AnalyticsReportingAPI(googleCoreCredential);
         this.tracker = new AnalyticsTrackingAPI(analyticsSetting.trackingId);
 
-        this.analyticsSetting = analyticsSetting;
         this.currentEventId = null;
+        this.logs = [];
     }
 
-    init() {
+    init(immediate) {
         return Promise.all([
-            this.reporter.init(),
+            this.reporter.init(immediate),
             this.tracker.init()
         ]).catch(Logger.error).then(() => (this));
     }
 
-    start(eventId) {
+    start(eventId, auth) {
         this.currentEventId = eventId;
-        this.init().then(() => {
+        this.init(auth).then(() => {
             console.log(this);
             this.report();
         });
     }
 
     report() {
-        this.reporter.getRealtimeData(`ga:${this.analyticsSetting.viewId}`, 'rt:pageviews');
+        this.reporter.getRealtimeData(
+            'ga:' + this.analyticsSetting.viewId,
+            'rt:totalEvents',
+            {
+                dimensions: ['rt:eventAction', 'rt:eventLabel'].join(','),
+                filters: `rt:eventCategory==${this.currentEventId}`
+            }
+        );
     }
 
     static parseEventId(hashFragment) {

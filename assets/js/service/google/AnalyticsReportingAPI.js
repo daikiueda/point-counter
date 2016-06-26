@@ -9,9 +9,9 @@ export default class AnalyticsReportingAPI {
         this.google = new GoogleCoreAPI(credential);
     }
 
-    init() {
+    init(immediate) {
         return this.google.init()
-            .then(() => {return this.google.auth(false)})
+            .then(() => {return this.google.auth(immediate)})
             .then(() => {return this.google.gapi.client.load(GOOGLE_LIB_NAME, GOOGLE_LIB_VERSION);})
             .then(() => {
                 this.api = this.google.gapi.client.analytics;
@@ -25,6 +25,9 @@ export default class AnalyticsReportingAPI {
 
         return new Promise((resolve, reject) => {
             request.execute((response) => {
+                if (response.error) {
+                    reject(response.error);
+                }
                 console.log(response);
                 resolve(response);
             });
