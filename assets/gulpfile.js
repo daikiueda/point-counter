@@ -8,7 +8,7 @@ const isProduction = process.env.NODE_ENV === 'production',
             FILENAME: 'libs.js'
         },
         JS: {
-            SRC: './js/app.js',
+            SRC: './js/app-based-on-choo.js',
             DEST: '../public/js',
             FILENAME: 'app.js'
         },

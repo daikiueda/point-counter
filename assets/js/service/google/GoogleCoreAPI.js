@@ -1,3 +1,4 @@
+const TIMEOUT_LIMIT_MILLISECOND = 10000;
 const GOOGLE_LIB_URL = 'https://apis.google.com/js/client.js?onload=';
 
 import GlobalCallbackUtil from '../../utils/GlobalCallbackUtil.js';
@@ -10,21 +11,23 @@ export default class GoogleAPI {
     }
 
     init() {
+        if (this.gapi) {
+            return Promise.resolve(this);
+        }
+        
         return new Promise((resolve, reject) => {
-            const globalCallbackUtil = new GlobalCallbackUtil(),
-
-                callbackFunc = () => {
-                    this.gapi = window.gapi;
-                    clearTimeout(timer);
-                    resolve(this);
-                },
-
-                callbackName = globalCallbackUtil.add(callbackFunc);
-
-            let timer = setTimeout(() => {
+            let timeout = setTimeout(() => {
                 globalCallbackUtil.remove(callbackFunc);
                 reject(new Error('Google client library loading timed out.'));
-            }, 10000);
+            }, TIMEOUT_LIMIT_MILLISECOND);
+
+            const globalCallbackUtil = new GlobalCallbackUtil(),
+                callbackFunc = () => {
+                    this.gapi = window.gapi;
+                    clearTimeout(timeout);
+                    resolve(this);
+                },
+                callbackName = globalCallbackUtil.add(callbackFunc);
 
             loadScriptAsync(`${GOOGLE_LIB_URL}${callbackName}`);
         });
@@ -39,7 +42,7 @@ export default class GoogleAPI {
                         reject(new Error(result.error_subtype));
                         return;
                     }
-                    resolve();
+                    resolve(this);
                 }
             );
         });
