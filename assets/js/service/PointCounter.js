@@ -25,37 +25,33 @@ export default class PointCounter extends Emitter {
         ]).catch(Logger.error).then(() => (this));
     }
 
-    start(eventId, auth) {
-        this.currentEventId = eventId;
-        this.init(auth).then(() => {
-            console.log(this);
-            this.report();
+    start(eventId, immediate) {
+        this.init(immediate).then(() => {
+            this.report(eventId);
         });
     }
 
-    report() {
-        this.reporter.getRealtimeData(
-            'ga:' + this.analyticsSetting.viewId,
-            'rt:totalEvents',
-            {
-                dimensions: ['rt:eventAction', 'rt:eventLabel'].join(','),
-                filters: `rt:eventCategory==${this.currentEventId}`
-            }
-        );
+    report(eventId) {
+        return this.init(true).then(() => {
+            return this.reporter.getRealtimeData(
+                'ga:' + this.analyticsSetting.viewId,
+                'rt:totalEvents',
+                {
+                    dimensions: ['rt:eventAction', 'rt:eventLabel'].join(','),
+                    filters: `rt:eventCategory==${eventId}`
+                }
+            ).then(results => {
+                return results;
+            });
+        });
     }
 
-    static parseEventId(hashFragment) {
-        var id = hashFragment.replace('#', '').split('/').shift();
-        return id.length ? id : null;
-    }
-
-    static generateEventId() {
-        let today = new Date();
-        return [
-            today.getFullYear(),
-            ('0' + (today.getMonth() + 1)).substr(-2),
-            ('0' + today.getDate()).substr(-2),
-            Math.random().toString(36).substr(-8)
-        ].join('-');
+    track(beacon) {
+        return this.tracker.track(beacon.format());
     }
 }
+
+PointCounter.Event = {
+    REQUEST_AUTH: 'request-auth',
+    REPORT: 'report'
+};

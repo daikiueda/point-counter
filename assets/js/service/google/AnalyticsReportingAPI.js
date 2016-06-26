@@ -10,6 +10,10 @@ export default class AnalyticsReportingAPI {
     }
 
     init(immediate) {
+        if (this.api) {
+            return Promise.resolve(this);
+        }
+
         return this.google.init()
             .then(() => {return this.google.auth(immediate)})
             .then(() => {return this.google.gapi.client.load(GOOGLE_LIB_NAME, GOOGLE_LIB_VERSION);})
@@ -28,7 +32,7 @@ export default class AnalyticsReportingAPI {
                 if (response.error) {
                     reject(response.error);
                 }
-                console.log(response);
+                console.log(this, response);
                 resolve(response);
             });
         });

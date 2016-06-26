@@ -2,12 +2,12 @@ const TIMEOUT_LIMIT_MILLISECOND = 10000;
 
 export default class AnalyticsTrackingAPI {
     constructor(trackingId) {
-        this.track = null;
+        this._track = null;
         this.trackingId = trackingId;
     }
 
     init() {
-        if (this.track) {
+        if (this._track) {
             return Promise.resolve(this);
         }
 
@@ -34,9 +34,17 @@ export default class AnalyticsTrackingAPI {
             window.ga('send', 'pageview');
             window.ga(() => {
                 clearTimeout(timeout);
-                this.track = window.ga.bind(window);
+                this._track = window.ga.bind(window);
                 resolve(this);
             });
+        });
+    }
+
+    track(beacon) {
+        return new Promise(resolve => {
+            beacon.hitCallback = resolve;
+            console.log(beacon);
+            this._track('send', beacon);
         });
     }
 }
