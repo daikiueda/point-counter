@@ -1,5 +1,5 @@
 import EventOrganizer from './service/EventOrganizer';
-import PointCounter from './service/PointCounter';
+import PointCounter from './service/withGoogleAnalytics/PointCounter';
 
 const GOOGLE_API_CREDENTIAL = require('./settings/google-api-credential.json');
 const GOOGLE_ANALYTICS_SETTINGS = require('./settings/google-analytics.json');

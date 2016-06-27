@@ -1,25 +1,37 @@
-import generateTimestamp from '../utils/generateTimestamp';
+import generateTimestamp from '../../utils/generateTimestamp';
 
 const LABEL_SEPARATOR = ',';
 
+
 export default class Activity {
-    constructor(eventId, gameId, type, details) {
+    /**
+     * @param {string} eventId
+     * @param {string} gameId
+     * @param {string|null} timestamp
+     * @param {Activity.Type.*} activityType
+     * @param {object} [details]
+     */
+    constructor(eventId, gameId, timestamp, activityType, details) {
 
         details = details || {};
 
         this.theEventId = eventId;
         this.gameId = gameId;
 
-        this.timestamp = generateTimestamp();
-        this.activityType = type;
+        this.timestamp = timestamp || generateTimestamp();
+        this.activityType = activityType;
 
         this.playerNumber = details.playerNumber;
         this.point = details.point;
         this.playerName = details.playerName;
     }
 
+    /**
+     * @return {{hitType: string, eventCategory: string, eventAction: string, eventLabel: string}}
+     */
     toAnalyticsBeacon() {
         let label = [this.timestamp, this.activityType];
+
         switch (this.activityType) {
             case Activity.Type.START:
                 break;
@@ -40,6 +52,7 @@ export default class Activity {
                 }
                 break;
         }
+
         return {
             hitType: 'event',
             eventCategory: this.theEventId,
@@ -47,6 +60,8 @@ export default class Activity {
             eventLabel: label.join(LABEL_SEPARATOR)
         };
     }
+
+    static parse(gaEventLabel) {}
 }
 
 Activity.Type = {

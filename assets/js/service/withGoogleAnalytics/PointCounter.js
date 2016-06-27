@@ -1,8 +1,9 @@
 import Emitter from 'tiny-emitter';
 
-import Logger from '../utils/Logger';
-import AnalyticsTrackingAPI from './google/AnalyticsTrackingAPI';
-import AnalyticsReportingAPI from './google/AnalyticsReportingAPI';
+import Logger from '../../utils/Logger';
+import AnalyticsTrackingAPI from 'api/AnalyticsTrackingAPI';
+import AnalyticsReportingAPI from 'api/AnalyticsReportingAPI';
+import Activity from './Activity';
 
 const DEFAULT_REPORTING_INTERVAL_MILLISECOND = 2000;
 
@@ -50,6 +51,8 @@ export default class PointCounter extends Emitter {
         return this.tracker.track(beacon.toAnalyticsBeacon());
     }
 }
+
+PointCounter.Activity = Activity;
 
 PointCounter.Event = {
     REQUEST_AUTH: 'request-auth',

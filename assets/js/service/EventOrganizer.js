@@ -1,18 +1,23 @@
 import Emitter from 'tiny-emitter';
-import PointCounter from './PointCounter';
-import Activity from './Activity';
 import generateCode from '../utils/generateUniqueCode';
 
 export default class EventOrganizer extends Emitter{
     constructor(eventId, pointCounter) {
         super();
+
+        const PointCounterClass = pointCounter.constructor;
+
         this.eventId = eventId;
         this.pointCounter = pointCounter;
+        this.Activity = PointCounterClass.Activity;
+
         this.games = [];
-        
-        this.pointCounter.on(PointCounter.Event.REQUEST_AUTH, () => {
-            this.emit(EventOrganizer.Event.REQUEST_AUTH);
-        });
+
+        if (PointCounterClass.Event && PointCounterClass.Event.REQUEST_AUTH) {
+            this.pointCounter.on(PointCounterClass.Event.REQUEST_AUTH, () => {
+                this.emit(EventOrganizer.Event.REQUEST_AUTH);
+            });
+        }
     }
 
     init() {
@@ -30,14 +35,13 @@ export default class EventOrganizer extends Emitter{
                             return this.addNewGame();
                         }
                     });
-            })
+            });
             // .then(() => {return this.pointCounter.start(this.eventId);});
     }
 
     addNewGame() {
         const gameId = EventOrganizer.Game.generateId();
-        let activity = new Activity(this.eventId, gameId, Activity.Type.START);
-        console.log(activity);
+        let activity = new this.Activity(this.eventId, gameId, this.Activity.Type.START);
         return this.pointCounter.track(activity);
     }
 
