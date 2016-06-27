@@ -1,8 +1,8 @@
 const TIMEOUT_LIMIT_MILLISECOND = 10000;
 const GOOGLE_LIB_URL = 'https://apis.google.com/js/client.js?onload=';
 
-import GlobalCallbackUtil from '../../utils/GlobalCallbackUtil.js';
-import loadScriptAsync from '../../utils/loadScriptAsync.js';
+import GlobalCallbackUtil from '../../../utils/GlobalCallbackUtil.js';
+import loadScriptAsync from '../../../utils/loadScriptAsync.js';
 
 export default class GoogleAPI {
     constructor(credential) {

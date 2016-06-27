@@ -1,8 +1,8 @@
 import Emitter from 'tiny-emitter';
 
 import Logger from '../../utils/Logger';
-import AnalyticsTrackingAPI from 'api/AnalyticsTrackingAPI';
-import AnalyticsReportingAPI from 'api/AnalyticsReportingAPI';
+import AnalyticsTrackingAPI from './api/AnalyticsTrackingAPI';
+import AnalyticsReportingAPI from './api/AnalyticsReportingAPI';
 import Activity from './Activity';
 
 const DEFAULT_REPORTING_INTERVAL_MILLISECOND = 2000;
