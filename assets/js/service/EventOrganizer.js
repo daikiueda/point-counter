@@ -1,6 +1,6 @@
 import Emitter from 'tiny-emitter';
 import PointCounter from './PointCounter';
-import GameBeacon from './GameBeacon';
+import Activity from './Activity';
 import generateCode from '../utils/generateUniqueCode';
 
 export default class EventOrganizer extends Emitter{
@@ -36,9 +36,9 @@ export default class EventOrganizer extends Emitter{
 
     addNewGame() {
         const gameId = EventOrganizer.Game.generateId();
-        let beacon = new GameBeacon(this.eventId, gameId, GameBeacon.Type.START);
-        console.log(beacon);
-        return this.pointCounter.track(beacon);
+        let activity = new Activity(this.eventId, gameId, Activity.Type.START);
+        console.log(activity);
+        return this.pointCounter.track(activity);
     }
 
     static parseId(hashFragment) {

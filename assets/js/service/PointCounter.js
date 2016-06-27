@@ -47,7 +47,7 @@ export default class PointCounter extends Emitter {
     }
 
     track(beacon) {
-        return this.tracker.track(beacon.format());
+        return this.tracker.track(beacon.toAnalyticsBeacon());
     }
 }
 
