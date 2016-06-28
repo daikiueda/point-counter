@@ -1,6 +1,7 @@
 import Emitter from 'tiny-emitter';
 import generateCode from '../utils/generateUniqueCode';
 
+
 export default class EventOrganizer extends Emitter{
     constructor(eventId, pointCounter) {
         super();
@@ -21,8 +22,7 @@ export default class EventOrganizer extends Emitter{
     }
 
     init() {
-        return this.pointCounter.init(true)
-            .then(() => (this));
+        return this.pointCounter.init(true).then(() => (this));
     }
 
     start() {
@@ -57,7 +57,7 @@ export default class EventOrganizer extends Emitter{
             ('0' + (today.getMonth() + 1)).substr(-2),
             ('0' + today.getDate()).substr(-2),
             generateCode(8)
-        ].join('-');
+        ].join('--');
     }
 }
 

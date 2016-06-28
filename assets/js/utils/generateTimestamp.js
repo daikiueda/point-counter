@@ -1,3 +1,7 @@
+/**
+ * 実行時点のタイムスタンプ（日付・時刻）を返却する。
+ * @return {string} YYYY-MM-DD hh:mm:ss
+ */
 export default function generateTimeStamp() {
     function pad(num) {
         return ('0' + num).slice(-2);

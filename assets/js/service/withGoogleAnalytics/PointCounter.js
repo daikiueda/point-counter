@@ -7,6 +7,7 @@ import Activity from './Activity';
 
 const DEFAULT_REPORTING_INTERVAL_MILLISECOND = 2000;
 
+
 export default class PointCounter extends Emitter {
     constructor(googleCoreCredential, analyticsSetting) {
         super();
@@ -23,7 +24,10 @@ export default class PointCounter extends Emitter {
         return Promise.all([
             this.reporter.init(immediate),
             this.tracker.init()
-        ]).catch(Logger.error).then(() => (this));
+        ]).catch(error => {
+            Logger.error(error);
+            return Promise.reject(error);
+        }).then(() => (this));
     }
 
     start(eventId, immediate) {
@@ -41,9 +45,7 @@ export default class PointCounter extends Emitter {
                     dimensions: ['rt:eventAction', 'rt:eventLabel'].join(','),
                     filters: `rt:eventCategory==${eventId}`
                 }
-            ).then(results => {
-                return results;
-            });
+            ).then(results => results);
         });
     }
 

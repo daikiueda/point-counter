@@ -15,8 +15,8 @@ export default class AnalyticsReportingAPI {
         }
 
         return this.google.init()
-            .then(() => {return this.google.auth(immediate)})
-            .then(() => {return this.google.gapi.client.load(GOOGLE_LIB_NAME, GOOGLE_LIB_VERSION);})
+            .then(() => this.google.auth(immediate))
+            .then(() => this.google.gapi.client.load(GOOGLE_LIB_NAME, GOOGLE_LIB_VERSION))
             .then(() => {
                 this.api = this.google.gapi.client.analytics;
                 return this;

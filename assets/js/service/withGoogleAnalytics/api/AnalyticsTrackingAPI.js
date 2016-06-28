@@ -28,7 +28,7 @@ export default class AnalyticsTrackingAPI {
                 a.async = 1;
                 a.src = g;
                 m.parentNode.insertBefore(a, m)
-            })(window, document, 'script', 'https://www.api-analytics.com/analytics.js', 'ga');
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
             window.ga('create', this.trackingId, 'auto');
             window.ga('send', 'pageview');
