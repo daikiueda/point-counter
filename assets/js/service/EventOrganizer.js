@@ -2,25 +2,37 @@ import Emitter from 'tiny-emitter';
 import generateCode from '../utils/generateUniqueCode';
 
 
-export default class EventOrganizer extends Emitter{
+export default class EventOrganizer extends Emitter {
+
+    /**
+     * @constructor
+     * @param {string} eventId
+     * @param {PointCounter} pointCounter
+     */
     constructor(eventId, pointCounter) {
         super();
 
-        const PointCounterClass = pointCounter.constructor;
+        this.PointCounterClass = pointCounter.constructor;
 
         this.eventId = eventId;
         this.pointCounter = pointCounter;
-        this.Activity = PointCounterClass.Activity;
+        this.Activity = this.PointCounterClass.Activity;
+        this.reportGameStatus = this.reportGameStatus.bind(this);
 
         this.games = [];
 
-        if (PointCounterClass.Event && PointCounterClass.Event.REQUEST_AUTH) {
-            this.pointCounter.on(PointCounterClass.Event.REQUEST_AUTH, () => {
+        if (this.PointCounterClass.Event.REQUEST_AUTH) {
+            this.pointCounter.on(this.PointCounterClass.Event.REQUEST_AUTH, () => {
                 this.emit(EventOrganizer.Event.REQUEST_AUTH);
             });
         }
     }
 
+    /**
+     * 初期化
+     * ポイント・カウンターを初期化する。
+     * @return {Promise.<EventOrganizer>}
+     */
     init() {
         return this.pointCounter.init(true).then(() => (this));
     }
@@ -35,14 +47,21 @@ export default class EventOrganizer extends Emitter{
                             return this.addNewGame();
                         }
                     });
+            })
+            .then(() => {
+                this.pointCounter.on(this.PointCounterClass.Event.REPORT, this.reportGameStatus);
+                return this.pointCounter.start(this.eventId);
             });
-            // .then(() => {return this.pointCounter.start(this.eventId);});
     }
 
     addNewGame() {
         const gameId = EventOrganizer.Game.generateId();
         let activity = new this.Activity(this.eventId, gameId, this.Activity.Type.START);
         return this.pointCounter.track(activity);
+    }
+
+    reportGameStatus(result) {
+        this.emit(EventOrganizer.Event.REPORT, result);
     }
 
     static parseId(hashFragment) {

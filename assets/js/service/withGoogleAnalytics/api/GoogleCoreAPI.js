@@ -5,17 +5,30 @@ import GlobalCallbackUtil from '../../../utils/GlobalCallbackUtil.js';
 import loadScriptAsync from '../../../utils/loadScriptAsync.js';
 
 
-export default class GoogleAPI {
+/**
+ * GoogleCoreAPI
+ */
+export default class GoogleCoreAPI {
+
+    /**
+     * @constructor
+     * @param {api_key: string, client_id: string, scope: string} credential APIクライアントの認証情報
+     */
     constructor(credential) {
         this.gapi = null;
         this.credential = credential;
     }
 
+    /**
+     * 初期化
+     * Google API Client Library （外部JSファイル）を非同期にロードする。
+     * @return {Promise}
+     */
     init() {
         if (this.gapi) {
             return Promise.resolve(this);
         }
-        
+
         return new Promise((resolve, reject) => {
             let timeout = setTimeout(() => {
                 globalCallbackUtil.remove(callbackFunc);
@@ -34,6 +47,11 @@ export default class GoogleAPI {
         });
     }
 
+    /**
+     * 認証
+     * @param {boolean} immediate 即時認証の有無。trueの場合、認証UIは表示されない。
+     * @return {Promise}
+     */
     auth(immediate) {
         return new Promise((resolve, reject) => {
             this.gapi.auth.authorize(
@@ -49,6 +67,9 @@ export default class GoogleAPI {
         });
     }
 
+    /**
+     * サインアウト
+     */
     signOut() {
         this.gapi.auth.signOut();
     }
