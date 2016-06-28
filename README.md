@@ -14,7 +14,7 @@ $ npm start
 
 ### Event Category: Event
 
-Any strings(default: YYYY-MM-DD-_random srt_)
+Any strings(default: YYYY-MM-DD--_random srt_)
 
 Set by location.hash;
 
