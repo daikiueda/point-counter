@@ -1,4 +1,5 @@
 import Emitter from 'tiny-emitter';
+import Game from './Game';
 import generateCode from '../utils/generateUniqueCode';
 
 
@@ -12,17 +13,17 @@ export default class EventOrganizer extends Emitter {
     constructor(eventId, pointCounter) {
         super();
 
-        this.PointCounterClass = pointCounter.constructor;
+        this.PointCounter = pointCounter.constructor;
+        this.Activity = this.PointCounter.Activity;
 
         this.eventId = eventId;
         this.pointCounter = pointCounter;
-        this.Activity = this.PointCounterClass.Activity;
+        this.games = [];
+        
         this.reportGameStatus = this.reportGameStatus.bind(this);
 
-        this.games = [];
-
-        if (this.PointCounterClass.Event.REQUEST_AUTH) {
-            this.pointCounter.on(this.PointCounterClass.Event.REQUEST_AUTH, () => {
+        if (this.PointCounter.Event.REQUEST_AUTH) {
+            this.pointCounter.on(this.PointCounter.Event.REQUEST_AUTH, () => {
                 this.emit(EventOrganizer.Event.REQUEST_AUTH);
             });
         }
@@ -44,19 +45,29 @@ export default class EventOrganizer extends Emitter {
                     .then(results => {
                         console.log(this, results);
                         if (!results.totalResults) {
-                            return this.addNewGame();
+                            const game = this.addGame();
+                            return this.startGame(game);
                         }
                     });
             })
             .then(() => {
-                this.pointCounter.on(this.PointCounterClass.Event.REPORT, this.reportGameStatus);
+                this.pointCounter.on(this.PointCounter.Event.REPORT, this.reportGameStatus);
                 return this.pointCounter.start(this.eventId);
             });
     }
 
-    addNewGame() {
-        const gameId = EventOrganizer.Game.generateId();
-        let activity = new this.Activity(this.eventId, gameId, this.Activity.Type.START);
+    addGame(game) {
+        const game = game || new Game();
+
+        if (!this.games[game.id]) {
+            this.games[game.id] = game;
+        }
+
+        return game;
+    }
+
+    startGame(game) {
+        const activity = new this.Activity(this.eventId, game.id, this.Activity.Type.START);
         return this.pointCounter.track(activity);
     }
 
@@ -83,26 +94,4 @@ export default class EventOrganizer extends Emitter {
 EventOrganizer.Event = {
     REQUEST_AUTH: 'request-auth',
     REPORT: 'report'
-};
-
-EventOrganizer.Game = class Game {
-    constructor(id) {
-        this.id = id || EventOrganizer.Game.generateId();
-        this.players = [];
-    }
-
-    static generateId() {
-        return generateCode(8, true);
-    }
-};
-
-EventOrganizer.Player = class Player {
-    constructor(id) {
-        this.id = id || EventOrganizer.Player.generateId();
-        this.point = 0;
-    }
-
-    static generateId() {
-        return generateCode(8);
-    }
 };
