@@ -45,7 +45,7 @@ export default class EventOrganizer extends Emitter {
                     .then(results => {
                         console.log(this, results);
                         if (!results.totalResults) {
-                            const game = this.addGame();
+                            let game = this.addGame();
                             return this.startGame(game);
                         }
                     });
@@ -57,7 +57,7 @@ export default class EventOrganizer extends Emitter {
     }
 
     addGame(game) {
-        const game = game || new Game();
+        game = game || new Game();
 
         if (!this.games[game.id]) {
             this.games[game.id] = game;
