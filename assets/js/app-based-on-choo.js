@@ -14,7 +14,7 @@ if (!location.hash.length) {
     location.hash = eventId;
 }
 
-1
+
 organizer.on(EventOrganizer.Event.REQUEST_AUTH, () => {
     console.log(organizer, 'REQUEST AUTH');
 });
