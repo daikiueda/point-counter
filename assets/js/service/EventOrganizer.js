@@ -85,9 +85,8 @@ export default class EventOrganizer extends Emitter {
         return [
             today.getFullYear(),
             ('0' + (today.getMonth() + 1)).substr(-2),
-            ('0' + today.getDate()).substr(-2),
-            generateCode(8)
-        ].join('--');
+            ('0' + today.getDate()).substr(-2)
+        ].join('-') + `--${generateCode(8)}`;
     }
 }
 
