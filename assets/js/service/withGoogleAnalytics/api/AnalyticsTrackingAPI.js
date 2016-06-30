@@ -70,7 +70,7 @@ export default class AnalyticsTrackingAPI {
     track(beacon) {
         return new Promise(resolve => {
             beacon.hitCallback = resolve;
-            console.log(beacon);
+            console.log(this, beacon);
             this._track('send', beacon);
         });
     }

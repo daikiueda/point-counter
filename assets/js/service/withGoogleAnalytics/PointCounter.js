@@ -64,7 +64,7 @@ export default class PointCounter extends Emitter {
                 this.report(eventId).then(result => {
                     this.emit(PointCounter.Event.REPORT, result);
                 });
-            }, PointCounter.Setting.DEFAULT_REPORTING_INTERVAL_MILLISECOND);
+            }, PointCounter.Settings.DEFAULT_REPORTING_INTERVAL_MILLISECOND);
         });
     }
 
@@ -95,10 +95,23 @@ export default class PointCounter extends Emitter {
                     filters: `rt:eventCategory==${eventId}`,
                     fields: 'rows'
                 }
-            ).then(results => results.rows.map(recode => {
-                let params = PointCounter.Activity.parse(recode[1]);
-                return new PointCounter.Activity(eventId, recode[0], params.timestamp, params.type, params);
-            }));
+            ).then(results => results.rows ? results.rows.reduce((games, record) => {
+                let params = PointCounter.Activity.parseEventLabel(record[1]);
+
+                if (!games[record[0]]) {
+                    games[record[0]] = [];
+                }
+
+                games[record[0]].push(new PointCounter.Activity(
+                    eventId,
+                    record[0],
+                    params.timestamp,
+                    params.type,
+                    params
+                ));
+
+                return games;
+            }, []) : []);
         });
     }
 }
@@ -110,6 +123,6 @@ PointCounter.Event = {
     REPORT: 'report'
 };
 
-PointCounter.Setting = {
+PointCounter.Settings = {
     DEFAULT_REPORTING_INTERVAL_MILLISECOND: 2000
 };

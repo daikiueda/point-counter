@@ -28,21 +28,21 @@ Formatted by types.
 
 #### Start
 
-`start`,_`timestamp`_
+_`timestamp`_,`start`
 
 #### Name entory
 
-`name`,_`timestamp`_,_`player number`_,_`player name`_
+_`timestamp`_,`name`,_`playerIndex`_,_`playerName`_
 
 #### Point
 
-`point`,_`timestamp`_,_`player number`_,_`point`_ [, _`player name`_]
+_`timestamp`_,`point`,_`playerIndex`_,_`point`_ [, _`playerName`_]
 
 #### Modify point
 
-`modify`,_`timestamp`_,_`player number`_,_`point`_ [, _`player name`_]
+_`timestamp`_,`modify`,_`playerIndex`_,_`point`_ [, _`playerName`_]
 
 #### Winner
 
-`winner`,_`timestamp`_,_`player number`_,_`player name`_
+_`timestamp`_,`winner`,_`playerIndex`_ [,_`playerName`_]
 

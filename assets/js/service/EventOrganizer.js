@@ -43,8 +43,7 @@ export default class EventOrganizer extends Emitter {
             .then(() => {
                 return this.pointCounter.report(this.eventId)
                     .then(results => {
-                        console.log(this, results);
-                        if (!results.totalResults) {
+                        if (!results || !results.length) {
                             let game = this.addGame();
                             return this.startGame(game);
                         }
@@ -58,22 +57,27 @@ export default class EventOrganizer extends Emitter {
 
     addGame(game) {
         game = game || new Game();
-
-        if (!this.games[game.id]) {
-            this.games[game.id] = game;
-        }
-
+        this.games[game.id] = game;
         return game;
     }
 
     startGame(game) {
-        console.log('aaa', game.id);
         const activity = new this.Activity(this.eventId, game.id, null, this.Activity.Type.START);
         return this.pointCounter.track(activity);
     }
 
     reportGameStatus(result) {
-        this.emit(EventOrganizer.Event.REPORT, result);
+        console.log(result);
+        const isUpdated = Object.keys(result).reduce((isAnyGameUpdated, gameId) => {
+            if (!this.games[gameId]) {
+                this.addGame(new Game(gameId));
+            }
+            return this.games[gameId].update(result[gameId]) || isAnyGameUpdated;
+        }, false);
+
+        if (isUpdated) {
+            this.emit(EventOrganizer.Event.REPORT, this.games);
+        }
     }
 
     static parseId(hashFragment) {
