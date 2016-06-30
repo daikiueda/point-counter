@@ -12,17 +12,17 @@ $ npm start
 
 ## Google Analytics Events
 
-### Event Category: Event
+### Event Category: ```Event```
 
 Any strings(default: YYYY-MM-DD--_random srt_)
 
 Set by location.hash;
 
-### Event Action: Game
+### Event Action: ```Game```
 
-Timestamp and Generated Code, like `2016-06-26T17:50:43.420Z--01YH9F6R`
+Set automatically with Timestamp and Generated Code, like `2016-06-26T17:50:43.420Z--01YH9F6R`
 
-### Event Label: Activity
+### Event Label: ```Activity```
 
 Formatted by types.
 
@@ -30,7 +30,7 @@ Formatted by types.
 
 _`timestamp`_,`start`
 
-#### Name entory
+#### Name entry
 
 _`timestamp`_,`name`,_`playerIndex`_,_`playerName`_
 
