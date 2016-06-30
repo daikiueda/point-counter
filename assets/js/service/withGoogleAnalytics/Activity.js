@@ -8,10 +8,13 @@ export default class Activity {
      * @param {string} eventId
      * @param {string} gameId
      * @param {string|null} timestamp
-     * @param {Activity.Type.*} activityType
+     * @param {Activity.Type.*} type
      * @param {object} [details]
      */
-    constructor(eventId, gameId, timestamp, activityType, details) {
+    constructor(eventId, gameId, timestamp, type, details) {
+        if (timestamp && !timestamp.match(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/)) {
+            throw new TypeError(`${this}: invalid timestamp: ${timestamp}`);
+        }
 
         details = details || {};
 
@@ -19,18 +22,20 @@ export default class Activity {
         this.gameId = gameId;
 
         this.timestamp = timestamp || generateTimestamp();
-        this.activityType = activityType;
+        this.activityType = type;
 
         this.playerNumber = details.playerNumber;
         this.point = details.point;
         this.playerName = details.playerName;
+
+        console.log('bbb', this);
     }
 
     /**
      * @return {{hitType: string, eventCategory: string, eventAction: string, eventLabel: string}}
      */
     toAnalyticsBeacon() {
-        let label = [this.timestamp, this.activityType];
+        let labels = [this.timestamp, this.activityType];
 
         switch (this.activityType) {
             case Activity.Type.START:
@@ -38,17 +43,17 @@ export default class Activity {
 
             case Activity.Type.NAME:
             case Activity.Type.WINNER:
-                label.push(this.playerNumber);
+                labels.push(this.playerNumber);
                 if (this.playerName) {
-                    label.push(this.playerName);
+                    labels.push(this.playerName);
                 }
                 break;
 
             case Activity.Type.POINT:
             case Activity.Type.MODIFY:
-                label = label.concat([this.playerNumber, this.point]);
+                labels = labels.concat([this.playerNumber, this.point]);
                 if (this.playerName) {
-                    label.push(this.playerName);
+                    labels.push(this.playerName);
                 }
                 break;
         }
@@ -57,7 +62,7 @@ export default class Activity {
             hitType: 'event',
             eventCategory: this.theEventId,
             eventAction: this.gameId,
-            eventLabel: label.join(LABEL_SEPARATOR)
+            eventLabel: labels.join(LABEL_SEPARATOR)
         };
     }
 

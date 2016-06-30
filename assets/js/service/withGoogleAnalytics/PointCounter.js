@@ -92,9 +92,13 @@ export default class PointCounter extends Emitter {
                 'rt:totalEvents',
                 {
                     dimensions: ['rt:eventAction', 'rt:eventLabel'].join(','),
-                    filters: `rt:eventCategory==${eventId}`
+                    filters: `rt:eventCategory==${eventId}`,
+                    fields: 'rows'
                 }
-            ).then(results => results);
+            ).then(results => results.rows.map(recode => {
+                let params = PointCounter.Activity.parse(recode[1]);
+                return new PointCounter.Activity(eventId, recode[0], params.timestamp, params.type, params);
+            }));
         });
     }
 }

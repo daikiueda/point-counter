@@ -67,7 +67,8 @@ export default class EventOrganizer extends Emitter {
     }
 
     startGame(game) {
-        const activity = new this.Activity(this.eventId, game.id, this.Activity.Type.START);
+        console.log('aaa', game.id);
+        const activity = new this.Activity(this.eventId, game.id, null, this.Activity.Type.START);
         return this.pointCounter.track(activity);
     }
 
