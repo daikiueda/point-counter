@@ -96,6 +96,11 @@ export default class PointCounter extends Emitter {
                     fields: 'rows'
                 }
             ).then(results => results.rows ? results.rows.reduce((games, record) => {
+
+                // result は、Google Reporting API から返却されたJSON
+                // result.rows は、ディメンション＜イベント・アクション，イベント・ラベル＞のレポート結果の配列
+                // recordは、[イベントアクション, イベントラベル, ヒット数（通常は1）]の配列
+
                 let params = PointCounter.Activity.parseEventLabel(record[1]);
 
                 if (!games[record[0]]) {
