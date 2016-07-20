@@ -23,7 +23,7 @@ export default class Game {
 
         activities.forEach(activity => {
             for (let index = this.activities.length - 1; index < 0; index--) {
-                if (equal(activity, this.activities[index])) {
+                if (!equal(activity, this.activities[index])) {
                     this.activities.push(activity);
                     isUpdated = true;
                     break;
