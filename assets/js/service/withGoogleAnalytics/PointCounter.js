@@ -119,8 +119,8 @@ export default class PointCounter extends Emitter {
 PointCounter.Activity = Activity;
 
 PointCounter.Event = {
-    REQUEST_AUTH: 'request-auth',
-    REPORT: 'report'
+    REQUEST_AUTH: 'PointCounter.RequestAuth',
+    REPORT: 'PointCounter.Report'
 };
 
 PointCounter.Settings = {

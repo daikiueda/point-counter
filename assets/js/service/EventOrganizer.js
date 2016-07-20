@@ -96,6 +96,6 @@ export default class EventOrganizer extends Emitter {
 }
 
 EventOrganizer.Event = {
-    REQUEST_AUTH: 'request-auth',
-    REPORT: 'report'
+    REQUEST_AUTH: 'EventOrganizer.RequestAuth',
+    REPORT: 'EventOrganizer.Report'
 };
