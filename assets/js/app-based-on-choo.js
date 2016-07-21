@@ -10,6 +10,11 @@ const pointCounter = new PointCounter(GOOGLE_API_CREDENTIAL, GOOGLE_ANALYTICS_SE
 const eventId = EventOrganizer.parseId(location.hash) || EventOrganizer.generateId();
 const organizer = new EventOrganizer(eventId, pointCounter);
 
+if (!location.hash.length) {
+    location.hash = eventId;
+}
+
+
 const app = choo();
 
 app.model({
@@ -26,7 +31,6 @@ app.model({
         },
         (send, done) => {
             organizer.on(EventOrganizer.Event.REPORT, (result) => {
-                console.log(organizer, result);
                 send('update', result, err => {
                     if (err) return done(err);
                 });
@@ -57,9 +61,3 @@ const tree = app.start();
 document.getElementById('app').appendChild(tree);
 
 organizer.start();
-
-// if (!location.hash.length) {
-//     app.router(`/${eventId}`);
-// }
-
-

@@ -38,6 +38,16 @@ export default class EventOrganizer extends Emitter {
         return this.pointCounter.init(true).then(() => (this));
     }
 
+    /**
+     * 定期レポート処理の開始
+     *
+     * 以下を順次実行する。
+     *   1. 計測済みのゲームの内容を取得する。計測記録が無い場合は、新たにゲームを開始する。
+     *   2. pointCounterのイベント検知を追加して、ポイント・カウンターの定期レポート処理を開始する。
+     *   3. 初期表示のため、自身のレポート・イベントを発火する。
+     *
+     * @return {Promise.<TResult>}
+     */
     start() {
         return this.init()
             .then(() => {
@@ -52,9 +62,14 @@ export default class EventOrganizer extends Emitter {
             .then(() => {
                 this.pointCounter.on(this.PointCounter.Event.REPORT, this.reportGameStatus);
                 return this.pointCounter.start(this.eventId);
-            });
+            })
+            .then(() => this.reportGameStatus([], true));
     }
 
+    /**
+     * @param {Game} [game]
+     * @return {Game}
+     */
     addGame(game) {
         game = game || new Game();
         this.games[game.id] = game;
@@ -66,16 +81,16 @@ export default class EventOrganizer extends Emitter {
         return this.pointCounter.track(activity);
     }
 
-    reportGameStatus(result) {
+    reportGameStatus(result, forceUpdate) {
         console.log(result);
         const isUpdated = Object.keys(result).reduce((isAnyGameUpdated, gameId) => {
             if (!this.games[gameId]) {
                 this.addGame(new Game(gameId));
             }
-            return this.games[gameId].update(result[gameId]) || isAnyGameUpdated;
+            return this.games[gameId].addActivities(result[gameId]) || isAnyGameUpdated;
         }, false);
 
-        if (isUpdated) {
+        if (isUpdated || forceUpdate) {
             this.emit(EventOrganizer.Event.REPORT, this.games);
         }
     }
